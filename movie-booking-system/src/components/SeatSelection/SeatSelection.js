@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 
-const SeatSelection = ({ onSeatsSelect }) => {
+const SeatSelection = ({ onSeatsSelect, bookedSeats = [] }) => {
   const [selectedSeats, setSelectedSeats] = useState([]);
   const seats = Array.from({ length: 50 }, (_, index) => index + 1); // 50 seats
 
   const toggleSeat = (seat) => {
-    setSelectedSeats((prev) =>
-      prev.includes(seat) ? prev.filter((s) => s !== seat) : [...prev, seat]
-    );
+    if (!bookedSeats.includes(seat)) {
+      setSelectedSeats((prev) =>
+        prev.includes(seat) ? prev.filter((s) => s !== seat) : [...prev, seat]
+      );
+    }
   };
 
   return (
@@ -17,8 +19,9 @@ const SeatSelection = ({ onSeatsSelect }) => {
         {seats.map((seat) => (
           <button
             key={seat}
-            className={`btn m-1 ${selectedSeats.includes(seat) ? 'btn-success' : 'btn-outline-primary'}`}
+            className={`btn m-1 ${bookedSeats.includes(seat) ? 'btn-secondary' : selectedSeats.includes(seat) ? 'btn-success' : 'btn-outline-primary'}`}
             onClick={() => toggleSeat(seat)}
+            disabled={bookedSeats.includes(seat)}
             style={{ width: '50px', height: '50px' }}
           >
             {seat}
